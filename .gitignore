@@ -1,0 +1,11 @@
+/app/wwwroot/uploads/
+/app/webroot/uploads/
+/app/webroot/cache/
+/app/tmp/
+/lib/Cake/Console/Templates/skel/tmp/
+/app/Config/database.php
+/*.sql
+/*.zip
+/nbproject/private/
+/.metadata/
+/.settings/
