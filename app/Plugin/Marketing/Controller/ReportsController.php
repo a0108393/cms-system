@@ -3,7 +3,7 @@ class ReportsController extends AppController {
 	var $name = 'Reports';
 	var $layout = 'report';
 	public $uses = array('Marketing.AdvertisingLink','Marketing.SaveReport','Marketing.LinkVisit','Marketing.Event');
-
+	
 	//report chart links
 	function links()
 	{

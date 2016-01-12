@@ -5,31 +5,25 @@
 				<?php echo $this->Html->menuAction(__('Marketing'), 'compressed',array('plugin' => 'marketing', 'controller' => 'channels'), array('class' => 'dropdown-close sidebar-item hasChild')); ?>
 				<ul class="nav nav-stacked sub-nav  submenu-content">
 					<li>
-						<?php echo $this->Html->menuAction(__('Advertising'), '',array('plugin' => 'marketing', 'controller' => 'advertisingLinks'), array('class' => 'sidebar-item')); ?>
-					</li>
-					<li>
-						<?php echo $this->Html->menuAction(__('Channels'), '',array('plugin' => 'marketing', 'controller' => 'channels'), array('class' => 'sidebar-item')); ?>
-					</li>
-					<li>
 						<?php echo $this->Html->menuAction(__('Events'), '',array('plugin' => 'marketing', 'controller' => 'events'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Report Links'), '',array('plugin' => 'marketing', 'controller' => 'reports', 'action' => 'links'), array('class' => 'sidebar-item')); ?>
+						<?php echo $this->Html->menuAction(__('Manage  Links'), '',array('plugin' => 'marketing', 'controller' => 'advertisingLinks'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Report Enquiries'), '',array('plugin' => 'marketing', 'controller' => 'reports', 'action' => 'enquiries'), array('class' => 'sidebar-item')); ?>
+						<?php echo $this->Html->menuAction(__('Manage  Channels'), '',array('plugin' => 'marketing', 'controller' => 'channels'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Enquiries'), '',array('plugin' => 'marketing', 'controller' => 'enquiries'), array('class' => 'sidebar-item')); ?>
+						<?php echo $this->Html->menuAction(__('Marketing Enquiries'), '',array('plugin' => 'marketing', 'controller' => 'enquiries'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Add enquiry'), '',array('plugin' => 'marketing', 'controller' => 'enquiries','action'=>'add'), array('class' => 'sidebar-item')); ?>
+						<?php echo $this->Html->menuAction(__('Our Affiliates'), '',array('plugin' => 'marketing', 'controller' => 'affiliates','action'=>'index'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Affiliates'), '',array('plugin' => 'marketing', 'controller' => 'affiliates','action'=>'index'), array('class' => 'sidebar-item')); ?>
+						<?php echo $this->Html->menuAction(__('Enquiry Reports'), '',array('plugin' => 'marketing', 'controller' => 'reports', 'action' => 'enquiries'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Add affiliate'), '',array('plugin' => 'marketing', 'controller' => 'affiliates','action'=>'add'), array('class' => 'sidebar-item')); ?>
+						<?php echo $this->Html->menuAction(__('Link Reports'), '',array('plugin' => 'marketing', 'controller' => 'reports', 'action' => 'links'), array('class' => 'sidebar-item')); ?>
 					</li>
 				</ul>
 			</li>
@@ -40,21 +34,11 @@
 						<?php echo $this->Html->menuAction(__('Companies'), '',array('plugin' => 'company', 'controller' => 'companies'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Add company'), '',array('plugin' => 'company', 'controller' => 'companies', 'action' => 'add'), array('class' => 'sidebar-item')); ?>
-					</li>
-					<li>
 						<?php echo $this->Html->menuAction(__('Industries'), '',array('plugin' => 'company', 'controller' => 'industries'), array('class' => 'sidebar-item')); ?>
-					</li>
-					<li>
-						<?php echo $this->Html->menuAction(__('Add industry'), '',array('plugin' => 'company', 'controller' => 'industries', 'action' => 'add'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
 						<?php echo $this->Html->menuAction(__('Users'), '',array('plugin' => 'company', 'controller' => 'users', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
 					</li>
-					<li>
-						<?php echo $this->Html->menuAction(__('Add user'), '',array('plugin' => 'company', 'controller' => 'users', 'action' => 'add'), array('class' => 'sidebar-item')); ?>
-					</li>
-					
 				</ul>
 			</li>
 			<li>
@@ -64,22 +48,13 @@
 						<?php echo $this->Html->menuAction(__('Ratecards'), '',array('plugin' => 'accounting', 'controller' => 'ratecards'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Add ratecard'), '',array('plugin' => 'accounting', 'controller' => 'ratecards', 'action' => 'add'), array('class' => 'sidebar-item')); ?>
-					</li>
-					<li>
 						<?php echo $this->Html->menuAction(__('Categories'), '',array('plugin' => 'accounting', 'controller' => 'categories'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
 						<?php echo $this->Html->menuAction(__('Services'), '',array('plugin' => 'accounting', 'controller' => 'services'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Add Service'), '',array('plugin' => 'accounting', 'controller' => 'services', 'action' => 'add'), array('class' => 'sidebar-item')); ?>
-					</li>
-					<li>
 						<?php echo $this->Html->menuAction(__('Quotations'), '',array('plugin' => 'accounting', 'controller' => 'quotations', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
-					</li>
-					<li>
-						<?php echo $this->Html->menuAction(__('Add Quotation'), '',array('plugin' => 'accounting', 'controller' => 'quotations', 'action' => 'add'), array('class' => 'sidebar-item')); ?>
 					</li>
 				</ul>
 			</li>
@@ -91,15 +66,11 @@
 						<?php echo $this->Html->menuAction(__('Briefs'), '',array('plugin' => 'project', 'controller' => 'briefs', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Add Brief'), '',array('plugin' => 'project', 'controller' => 'briefs', 'action' => 'add'), array('class' => 'sidebar-item')); ?>
-					</li>
-					<li>
 						<?php echo $this->Html->menuAction(__('MeetingMinutes'), '',array('plugin' => 'project', 'controller' => 'MeetingMinutes', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Add Meeting Minute'), '',array('plugin' => 'project', 'controller' => 'MeetingMinutes', 'action' => 'add'), array('class' => 'sidebar-item')); ?>
+						<?php echo $this->Html->menuAction(__('Change Request'), '',array('plugin' => 'project', 'controller' => 'ChangeRequests', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
 					</li>
-					
 				</ul>
 			</li>
 			<li>

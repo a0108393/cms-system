@@ -8,11 +8,13 @@ echo $this->Session->flash();
 
 	<?php					
     echo $this->Form->inputDatepicker('enq_date',array( 
-												'label' => array('class' => 'col-lg-2 control-label', 'text' => __('Enquiry Date')), 
+												'label' => array('class' => 'col-lg-2 control-label', 'text' => __('Enquiry Date*')), 
 												'class' => 'form-control',
 												'id'	=>'datetimepicker',
 												'required'=>'required'));
-    echo $this->Form->input('name');
+    
+	
+	echo $this->Form->input('name');
     echo $this->Form->input('email');
     echo $this->Form->input('contact',array('label'=>array(
 													'class'	=>'col-lg-2 control-label','text'=>__('Contact No')),
