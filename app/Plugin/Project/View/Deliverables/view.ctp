@@ -1,6 +1,8 @@
+<h3><?php echo __('View Change Requests'); ?></h3>
 <div class="top-btn-group">
 <?php
 	echo $this->Html->topAction(__('Add New'), 'plus-sign', array('action' => 'add'), 'inverse');
+	//echo $this->Html->topAction(__('View'), 'minus-sign', array('action' => 'detail'), 'inverse');
 ?>
 <div id="show-search" class="btn btn-default pull-right"><span class="glyphicon glyphicon-search"></span> Search</div>
 <?php echo $this->Form->create('Search', array('type' => 'Get' , 'class' => 'form-inline' ,'id' => 'form-search-common')); ?>
@@ -41,8 +43,9 @@
 			$key,
 			$this->Html->link($item['ChangeRequest']['name'], array('controller' => 'ChangeRequests', 'action' => 'view', $item['ChangeRequest']['id'])),
 			$item['Project']['name'],
-			$item['ChangeRequest']['type'],
+			//$item['ChangeRequest']['type'],
 			formatDate($item['ChangeRequest']['date']),
+			$this->Html->gridAction('eye-open', array('action' => 'view', $item['ChangeRequest']['id']), $item).
 			$this->Html->gridAction('edit', array('action' => 'edit', $item['ChangeRequest']['id']), $item).
 			$this->Html->gridAction('trash', array('action' => 'delete', $item['ChangeRequest']['id']), $item, __('Are you sure?'))
 		);

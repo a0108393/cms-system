@@ -5,7 +5,8 @@ $allow_action = array(
 $crud_mapping = array(
 	array('c' => 'briefs', 'a' => array('view' => array('index', 'viewPdf'), 'edit' => array('add', 'edit', 'visitor'))),
 	array('c' => 'MeetingMinutes', 'a' => array('view' => array('index', 'viewPdf'), 'edit' => array('add', 'edit', 'visitor', 'ajaxDeleteNoteDetail'))),
-	array('c' => 'ChangeRequests', 'a' => array('view' => array('index', 'viewPdf'), 'edit' => array('add', 'edit', 'visitor')))
+	array('c' => 'ChangeRequests', 'a' => array('view' => array('index', 'viewPdf'), 'edit' => array('add', 'edit', 'detail', 'visitor'))),
+	array('c' => 'Deliverables', 'a' => array('view' => array('index', 'viewPdf'), 'edit' => array('add', 'edit','detail','visitor')))
 	
 	
 

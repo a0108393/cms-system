@@ -2,8 +2,10 @@
 
 <?php
 
+$EnquiryNo = 3;
+for($i = 1; $i < $EnquiryNo +1; $i++) {
 	echo "Enquiry ";
-
+	echo $i;
 	echo $this->Form->create('ProjectEnquiries');
 	echo $this->Form->input('title');
 	
@@ -22,7 +24,7 @@
 
 	echo '<hr />';
 	
-
+}
 ?>
 
 
@@ -46,7 +48,7 @@
 
 <?php
 // to add RequestPay() in Controller to redirect for admin to confirm the amount payable
-    echo $this->Form->create('ChangeRequest', array('action' => 'getPayRequest'));
+    echo $this->Form->create('Deliverable', array('action' => 'getPayRequest'));
 	echo $this->Form->input('type', array(
 		'label' => array('text' => __('Enquiry Type'), 'class' => 'col-lg-2 control-label'),
 		'options' => array(1, 2, 3, 4, 5),

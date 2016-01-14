@@ -61,7 +61,9 @@
 			
 			<li>
 				<?php echo $this->Html->menuAction(__('Project'), 'compressed',array('plugin' => 'project', 'controller' => 'briefs'), array('class' => 'dropdown-close sidebar-item hasChild')); ?>
+
 				<ul class="nav nav-stacked sub-nav  submenu-menus">
+			
 					<li>
 						<?php echo $this->Html->menuAction(__('Briefs'), '',array('plugin' => 'project', 'controller' => 'briefs', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
 					</li>
@@ -69,10 +71,12 @@
 						<?php echo $this->Html->menuAction(__('MeetingMinutes'), '',array('plugin' => 'project', 'controller' => 'MeetingMinutes', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->menuAction(__('Change Request'), '',array('plugin' => 'project', 'controller' => 'ChangeRequests', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
+						<?php echo $this->Html->menuAction(__('Deliverables'), '',array('plugin' => 'project', 'controller' => 'Deliverables', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
 					</li>
-				</ul>
-			</li>
+				</ul>	
+
+				
+			</li>		
 			<li>
 				<?php echo $this->Html->menuAction(__('User'), 'user',array('plugin' => false, 'controller' => 'users'), array('class' => 'dropdown-close sidebar-item hasChild')); ?>
 				<ul class="nav nav-stacked sub-nav  submenu-users">

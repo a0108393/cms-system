@@ -1,16 +1,16 @@
 <?php
-class ChangeRequest extends AppModel {
+class Project extends AppModel {
 	//var $name = 'notes';
-	var $belongsTo = array(
-		'Project' => array(
-			'className' => 'Project',
-			'foreignKey' => 'id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
-	);
 	
+
+	public $hasMany = array(
+        'ChangeRequest' => array(
+            'className' => 'ChangeRequest',
+            'foreignKey' => 'project_name',
+            'order' => 'ChangeRequest.date ASC',
+            'dependent' => true
+        )
+    );
 	public $validate = array(
 	    'title' => array(
 	        'duplicate' => array(

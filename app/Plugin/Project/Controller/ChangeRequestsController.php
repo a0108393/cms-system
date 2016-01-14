@@ -31,6 +31,13 @@ class ChangeRequestsController extends AppController {
         $this->set('data', $data);
 	}
 
+	public function getPayRequest() {
+		$this->ChangeRequest->recursive = 2;
+		$data = $this->paginate('ChangeRequest');
+        $this->set('data', $data);
+	}
+
+	
 	public function add()
 	{
 		if($this->request->is(array('post', 'put'))) {
@@ -126,10 +133,10 @@ class ChangeRequestsController extends AppController {
 	public function view($id) {
 		$this->request->data = $this->ChangeRequest->read(null, $id);
 		$this->request->data['ChangeRequest']['date'] = formatDate($this->request->data['ChangeRequest']['date']);
-		$this->request->data['ChangeRequest']['attendees'] = json_decode($this->request->data['ChangeRequest']['attendees'], true);
-		$this->request->data['ChangeRequest']['cc_list'] = json_decode($this->request->data['ChangeRequest']['cc_list'], true);
-		$note_details = $this->NoteDetail->getByNote($id);
-		$this->set('note_details', $note_details);
+		//$this->request->data['ChangeRequest']['attendees'] = json_decode($this->request->data['ChangeRequest']['attendees'], true);
+		//$this->request->data['ChangeRequest']['cc_list'] = json_decode($this->request->data['ChangeRequest']['cc_list'], true);
+		//$note_details = $this->NoteDetail->getByNote($id);
+		//$this->set('note_details', $note_details);
 	}
 
 	public function delete($id)

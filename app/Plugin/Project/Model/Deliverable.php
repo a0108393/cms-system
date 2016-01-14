@@ -1,5 +1,5 @@
 <?php
-class ChangeRequest extends AppModel {
+class Deliverable extends AppModel {
 	//var $name = 'notes';
 	var $belongsTo = array(
 		'Project' => array(
