@@ -1,58 +1,276 @@
-<h3><?php echo __('View Change Requests'); ?></h3>
-<div class="top-btn-group">
-<?php
-	echo $this->Html->topAction(__('Add New'), 'plus-sign', array('action' => 'add'), 'inverse');
-	//echo $this->Html->topAction(__('View'), 'minus-sign', array('action' => 'detail'), 'inverse');
-?>
-<div id="show-search" class="btn btn-default pull-right"><span class="glyphicon glyphicon-search"></span> Search</div>
-<?php echo $this->Form->create('Search', array('type' => 'Get' , 'class' => 'form-inline' ,'id' => 'form-search-common')); ?>
-<table class="table table-striped">
-	<?php
-		$tableHeaders = $this->Html->tableHeaders(array(
-			__('No.'),
-			$this->Paginator->sort('name', __('Title')),
-			 __('Project'),
-			$this->Paginator->sort('type', __('Type')),
-			$this->Paginator->sort('date', __('Date'))
-		));
-	?>
-	<thead>
-		<?php echo $tableHeaders; ?>
-	</thead>
-	<?php 
-		$from_s = array(
-			$this->Form->inputFilter('ChangeRequest','name', 'input', array('placeholder' => 'Title')),
-			$this->Form->inputFilter('Project','name', 'input', array('placeholder' => 'project name')),
-			$this->Form->inputFilter('ChangeRequest','type', 'input', array('placeholder' => 'Type')),
-			$this->Form->inputFilter('ChangeRequest','id', 'range', array('placeholder' => '')),
-			$this->Form->inputFilter('ChangeRequest','date', 'range_date', array('placeholder' => '')),
+	<header>
+	<script>
+	function trigggerPay() {
+	var el = document.getElementById('ChangeRequestType').value;
+	
+	if(el == 'Free') {
+	document.getElementById('ChangeRequestAmountChargeable').value = 0.00;
+	document.getElementById('ChangeRequestWaive').value = 0;
+	}
+	}
+	</script>
+	
+	</header>
+	
+	<h3><?php echo __('View Deliverables Details'); ?></h3>
+
+	<table class="table table-striped">
+		<tr>
+			<td width="20%" class="briefLeft"><?php echo __('ID');?></td>
+			<td><?php echo $data['Deliverable']['id']; ?></td>
+		</tr>
+		
+		<tr>
+			<td width="20%" class="briefLeft"><?php echo __('Name');?></td>
+			<td><?php echo $data['Deliverable']['name']; ?></td>
+		</tr>
 			
-			$this->Form->input('Search[Table]',array('type' => 'hidden','value' => 'ChangeRequest')).
-			'<button type="submit" class="btn btn-info  btn-xs">Search</button>'			
-		);
-	?>
-	<tbody id="search" <?php echo isset($this->request->query['Search'])?'':'style="display:none"'; ?>>
-		<?php echo $this->Html->tableCells($from_s); ?>
-	<tbody>
+		<tr>
+			<td width="20%" class="briefLeft"><?php echo __('Deliverable Type');?></td>
+			<td><?php echo $data['Deliverable']['type']; ?></td>
+		</tr>
+		
+		<tr>
+			<td width="20%" class="briefLeft"><?php echo __('Project Name');?></td>
+			<td><?php echo $data['Project']['name']; ?></td>
+		</tr>
+		
+		<tr>
+			<td width="20%" class="briefLeft"><?php echo __('No of Free Change Request Allowed');?></td>
+			<td><?php echo $data['Deliverable']['no_of_changes']; ?></td>
+		</tr>
+		
+		<tr>
+			<td width="20%" class="briefLeft"><?php echo __('No of Change Request Made');?></td>
+			<!--count number of change request under a specific deliverable-->
+			<?php
+			$count = 0;
+			foreach( $change_requests as $changeMade){		
+			if($changeMade == $data['Deliverable']['id']){
+			$count ++;
+			}
+			}
+			?>
+			
+			<td><?php echo $count; ?></td>
+		</tr>
+		
+		<tr>
+			<td width="20%" class="briefLeft"><?php echo __('Date Posted');?></td>
+			<td><?php echo $data['Deliverable']['date']; ?></td>
+		</tr>
+		
+		
+		<!--detail of the deliverables-->
+		<!--to add-->
+		<tr>
+			<td width="20%" class="briefLeft"><?php echo __('Detail of the Deliverables');?></td>
+			<td>
+			
+			<?php echo $data['Deliverable']['details']; ?>
+			
+			</td>
+		</tr>
+			
+	</table>
+
+	
+	
 	<?php
-	$rows = array();
-	$key = 0;
-	foreach($data as $item){ 
-		$key++;			
-		$rows[] = array(
-			$key,
-			$this->Html->link($item['ChangeRequest']['name'], array('controller' => 'ChangeRequests', 'action' => 'view', $item['ChangeRequest']['id'])),
-			$item['Project']['name'],
-			//$item['ChangeRequest']['type'],
-			formatDate($item['ChangeRequest']['date']),
-			$this->Html->gridAction('eye-open', array('action' => 'view', $item['ChangeRequest']['id']), $item).
-			$this->Html->gridAction('edit', array('action' => 'edit', $item['ChangeRequest']['id']), $item).
-			$this->Html->gridAction('trash', array('action' => 'delete', $item['ChangeRequest']['id']), $item, __('Are you sure?'))
-		);
-	 }
-	echo $this->Html->tableCells($rows);
- ?>
-</table>
-<?php echo $this->Form->end(); ?>
-<?php echo $this->Paginator->pagination(); ?>
-<?php echo $this->Paginator->limitbox(); ?>
+	echo '<h3>change requests of the deliverable</h3>';
+	echo '<table class= "table table-striped">';
+	foreach($allChanges as $change){
+	
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo __('ID');
+		echo '</td>';
+		echo '<td>';
+		echo $change['ChangeRequest']['deliverable_id']; 
+		'</td>';	
+		echo '</tr>';
+		
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo __('Name of change request');
+		echo '</td>';
+		echo '<td>';
+		echo $change['ChangeRequest']['name']; 
+		'</td>';	
+		echo '</tr>';
+		
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo __('Detail of change request');
+		echo '</td>';
+		echo '<td>';
+		echo 'to be added'; 
+		'</td>';	
+		echo '</tr>';
+		
+		echo '<tr>';
+		echo '	<td width="20%" class="briefLeft">';
+		echo __('Date of change request made');
+		echo '</td>';
+		echo '	<td>';
+		echo $change['ChangeRequest']['date']; 
+		echo '</td>';
+		echo '</tr>';	
+		
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo __('Type of change request');
+		echo '</td>';
+		echo '<td>';
+		echo $change['ChangeRequest']['type']; 
+		'</td>';	
+		echo '</tr>';
+		
+				
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo __('Amount payable');
+		echo '</td>';
+		echo '<td>';
+		echo $change['ChangeRequest']['cost']; 
+		'</td>';	
+		echo '</tr>';
+		
+						
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo __('Waive');
+		echo '</td>';
+		echo '<td>';
+		echo $change['ChangeRequest']['waived']; 
+		'</td>';	
+		echo '</tr>';
+		
+						
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo __('Client apprival status for paid change request');
+		echo '</td>';
+		echo '<td>';
+		echo $change['ChangeRequest']['status']; 
+		'</td>';	
+		echo '</tr>';
+		/*
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo 'past change requests ';
+		foreach($allChanges as $change){
+		echo $change['ChangeRequest']['deliverable_id'];
+		echo ' ' ;
+		echo $change['ChangeRequest']['date'];
+		}
+		echo '</td>';
+		echo '</tr>';
+	*/
+        echo '</td>';
+		echo '</tr>';
+		echo '</table>';
+	    
+		
+		echo '<table class= "table table-striped" onchange="trigggerPay()">';
+	if( $this->Session->read('Auth.User.id') == 46) {
+		/*
+		A “reply” button will be show at the end of each change request, 
+		when admin user click on it, a popup session will be shown on the screen, he would need to fill in:
+		-Approval status: approved/review/rejected (by default would be pending)
+		-Reply Detail [textarea]
+		-estimated submission date[date picker]
+		-type(free/paid)
+
+		 If the change request is not free(or ”type” option is set to “paid”), there will be 2 more fields for admin to fill in:
+		-amount chargeable[integer]
+		-waive[integer]
+		*/
+		echo $this->Form->create('ChangeRequest');
+		
+
+		echo '<td width="20%" class="briefLeft">';
+		
+		echo $this->Form->input('status', array(
+	    //'fieldName' => 'data[ChangeRequest][status]',
+	    'label' => array('text' => __('Approval status'), 'class' => 'col-lg-2 control-label'),
+	    'options' => array('Approved', 'review', 'Pending Approval(client)', 'submitted' ,'Closed'),
+		//'value' => 'closed',
+		));
+		echo '</td>';
+
+		
+		//to be editted
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		
+		echo $this->Form->input('Reply Detail', array('type' => 'textarea'));
+		
+		echo '</td>';
+		echo '</tr>';
+		
+		
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		
+		echo $this->Form->inputDatepicker('date_due', array(
+	  //'fieldName' => 'data[ChangeRequest][status]',
+	  'label' => array('text' => __('Estimate Submission Date'), 'class' => 'col-lg-2 control-label'),
+	   ));
+	   
+	    echo '</td>';
+		echo '</tr>';
+		
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+	   
+	 /* 
+	  echo $this->Form->input('type', array(
+	  //'fieldName' => 'data[ChangeRequest][status]',
+	  'empty' =>'Select Type',
+	  'label' => array('text' => __('Type'), 'class' => 'col-lg-2 control-label','id'=>'ChangeRequestType'),
+	  'options' => array('free','paid')
+	  
+		));
+      */
+	    echo '';
+	    echo '<label class = "col-lg-2 control-label">';
+	    echo 'Change Request Type';
+		echo '</label>';
+		echo '<select class = "form-control" id ="ChangeRequestType" onchange ="triggerPaid()">';
+		echo '<option value ="Free">Free';
+		echo '<option value = "Paid">Paid';
+		echo '</select>';
+   
+		
+		/*
+		popup for admin to fill if change type to paid or it is originally paid
+		if(data[ChangeRequest][type] = 'paid'){
+		echo $this
+		}
+		*/
+		
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo $this->Form->input('Amount chargeable S$');		
+		echo '</td>';
+		echo '</tr>';
+		
+
+		
+		echo '<tr>';
+		echo '<td width="20%" class="briefLeft">';
+		echo $this->Form->input('Waive %');		
+		echo '</td>';
+		echo '</tr>';
+	 
+	 
+	     
+		}
+			echo '</td>';
+			echo '</tr>';
+			echo '</table>';
+			}
+	?>
+
+  

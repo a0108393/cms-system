@@ -3,27 +3,56 @@ App::uses('AppController', 'Controller');
 
 class DeliverablesController extends AppController {
 
-	public $uses = array('Project.Deliverable', 'Project', 'Project.ChangeRequest','User', 'Project.Brief', 'Company.Company', 'Project.NoteDetail', 'Group');
+	public $uses = array('Project.Deliverable', 'Project', 'Project.ChangeRequest','Project.ChangeRequestDetail','User', 'Project.Brief', 'Company.Company', 'Project.NoteDetail', 'Group');
     public function beforeFilter()
 	{
 		parent::beforeFilter();
+		$projects = $this->Project->find('all');
+		$this->set('projects', $projects);
+			
 		$project_ids = $this->Project->find('list',array(
-			'fields' => 'name, id',
+		   'fields' => 'name, id',
+		   'permissionable' => false,
+		   'conditions' => array(
+			
+		   ),
+		));
+		$project_names = $this->Project->find('list',array(
+			'fields' => 'id, name',
 			'permissionable' => false,
 			'conditions' => array(
-				
+			
 			),
 		));
+		  
+		$change_requests = $this->ChangeRequest->find('list',array(
+			'fields' => 'deliverable_id',
+			'permissionable' => false,
+			'conditions' => array(  
+			),
+		));
+		  
+		$change_status = $this->ChangeRequest->find('list',array(
+			'fields' => 'status',
+			'permissionable' => false,
+			'conditions' => array(
+			),
+		));
+	  
+	  
+		$change_requests = $this ->ChangeRequest->find('all');
+	  
 		//$this->User->find('all', array('conditions'=>array('Author.id'=>'2')));
 		$clients = $this->Company->find('list',array(
 			'fields' => 'id, name',
 			'permissionable' => false,
 			'conditions' => array(
-				'Company.history_status' => 1
+			'Company.history_status' => 1
 			),
 			'order' => 'Company.name ASC'
 		));
-		$this->set(compact('clients', 'project_ids'));
+		$this->request->data['ChangeRequest']['deliverable_id'] = $change_requests;
+		$this->set(compact('clients', 'project_ids', 'project_names', 'change_requests', 'change_status'));
 	}
 
 	public function index() {
@@ -33,135 +62,96 @@ class DeliverablesController extends AppController {
 	}
 
 	public function getPayRequest() {
-		$this->Deliverabless->recursive = 2;
+		$this->Deliverable->recursive = 2;
 		$data = $this->paginate('Deliverable');
         $this->set('data', $data);
 	}
 
-	
-	public function add()
-	{
+	public function add($project_id){
+		$this->set('project_id',$project_id);
 		if($this->request->is(array('post', 'put'))) {
-			if(empty($this->request->data['NoteDetail'])) {
-				throw new Exception("Error Processing Request", 1);
+			$this->request->data['Deliverable']['date'] = gmdate('Y-m-d h:i:s');
+			
+			if(empty($this->request->data['Deliverable']['project_id'])){
+				echo 'no project selected';
+				$this->Session->setFlash(__('No project selected!'));
+				return false;
 			}
-			// print_r($this->request->data); die;
-			$this->Deliverables->create();
-			if( !in_array($this->request->data['Deliverables']['minute_taker'], $this->request->data['Deliverabless']['attendees']) && !in_array($this->request->data['Deliverabless']['minute_taker'], $this->request->data['Deliverabless']['cc_list']))
-				array_push($this->request->data['Deliverables']['attendees'], $this->request->data['Deliverabless']['minute_taker']);
-			if(!empty($this->request->data['Deliverabless']['cc_list']))
-				$list_user = array_merge($this->request->data['Deliverabless']['attendees'], $this->request->data['Deliverabless']['cc_list']);
-			else
-				$list_user = $this->request->data['Deliverabless']['attendees'];
-			$this->request->data['Deliverabless']['date'] = sqlFormatDate($this->request->data['Deliverabless']['date']);
-			$this->request->data['Deliverabless']['attendees'] = json_encode($this->request->data['Deliverabless']['attendees']);
-			$this->request->data['Deliverabless']['cc_list'] = json_encode($this->request->data['Deliverabless']['cc_list']);
-			foreach ($this->request->data['NoteDetail'] as $key => $value) {
-				if(!empty($value['due_date']))
-					$this->request->data['NoteDetail'][$key]['due_date'] = sqlFormatDateTime($value['due_date']);
+			
+			if( $this->Deliverable->saveAll($this->request->data)){
+					$this->Session->setFlash('Deliverable Created!');
+					$this->redirect(array('action' => 'index'));
 			}
-			if($this->Deliverabless->saveAll($this->request->data)) {
-				$id = $this->Deliverabless->id;
-				/*if($this->Deliverabless->title == $this->request->data['Deliverabless']['title'])
-					die;
-				$NoteDetails = array();
-				foreach ($this->request->data['note_details'] as $k => $item) {
-					$NoteDetails[$k]['type'] = $item['type'];
-					$NoteDetails[$k]['description'] = $item['description'];
-					$NoteDetails[$k]['note_id'] = $id;
-					if(isset($item['assigned_to']))
-						$NoteDetails[$k]['assigned_to'] = $item['assigned_to'];
-					if(isset($item['due_date']))
-						$NoteDetails[$k]['due_date'] = sqlFormatDateTime($item['due_date']);
-				}
-				$this->NoteDetail->saveMany($NoteDetails);*/
-				//send notify
-				$list_email = $this->User->find('list', array(
-					'fields' => 'id, email',
-					'conditions' => array(
-						'id' => $list_user
-					)
-				));
-				if(!empty($list_email)) {
-					$content = '<p>Title: <a href="'. Router::url(array('plugin' => false, 'controller' => 'Deliverables', 'action' => 'view', $id), true) .'">'. $this->request->data['Deliverabless']['title'] .'</a></p>';
-					$content .= '<p>Date: '. formatDate($this->request->data['Deliverabless']['date']) .'</p>';
-					$arr_options = array(
-						'to' => $list_email,
-						'subject' => __('Metting Minute has been created'),
-						'viewVars' => array('content' => $content)
-					);
-					$this->_sendemail($arr_options);
-				}
-				$this->Session->setFlash(__('The Meeting minute has been saved'));
-				$this->redirect(array('action' => 'index'));
-			}
+			
 		}
-		
+  
 	}
 
 	public function edit($id) {
-		$this->Deliverabless->id = $id;
-		
+		$this->Deliverable->id = $id;
+		if (!$this->Deliverable->exists()) {
+			throw new NotFoundException(__('Invalid Deliverable'));
+		}
+		// Deliverable fields: 	id name type 0: free 1: not free date project_id no_of_changes
 		if($this->request->is(array('post', 'put'))) {
-			$this->request->data['Deliverabless']['id'] = $id;
-			if( !in_array($this->request->data['Deliverabless']['minute_taker'], $this->request->data['Deliverabless']['attendees']) && !in_array($this->request->data['Deliverabless']['minute_taker'], $this->request->data['Deliverabless']['cc_list']))
-				array_push($this->request->data['Deliverabless']['attendees'], $this->request->data['Deliverabless']['minute_taker']);
-			$this->request->data['Deliverabless']['date'] = sqlFormatDate($this->request->data['Deliverabless']['date']);
-			$this->request->data['Deliverabless']['attendees'] = json_encode($this->request->data['Deliverabless']['attendees']);
-			$this->request->data['Deliverabless']['cc_list'] = json_encode($this->request->data['Deliverabless']['cc_list']);
-
-			foreach ($this->request->data['NoteDetail'] as $key => $value) {
-				if(!empty($value['due_date']))
-					$this->request->data['NoteDetail'][$key]['due_date'] = sqlFormatDateTime($value['due_date']);
-			}
-			if($this->Deliverabless->saveAll($this->request->data)) {
-				$this->Session->setFlash(__('The Meeting minute has been saved'));
+			$this->request->data['Deliverable']['id'] = $id;
+			
+			
+			if($this->Deliverable->saveAll($this->request->data)) {
+				$this->Session->setFlash(__('The Deliverable has been saved'));
 				$this->redirect(array('action' => 'index'));
 			}
 		}
 		else {
-			$this->request->data = $this->Deliverabless->read(null, $id);
-			$this->request->data['Deliverables']['date'] = formatDate($this->request->data['Deliverabless']['date']);
-			$this->request->data['Deliverables']['attendees'] = json_decode($this->request->data['Deliverabless']['attendees'], true);
-			$this->request->data['Deliverables']['cc_list'] = json_decode($this->request->data['Deliverabless']['cc_list'], true);
-			$note_details = $this->NoteDetail->getByNote($id);
-			$this->set('note_details', $note_details);
+			$this->request->data = $this->Deliverable->read(null, $id);
+			$this->request->data['Deliverable']['date'] = formatDate($this->request->data['Deliverable']['date']);
 		}
 	}
 
 	public function view($id) {
-		$data = $this->paginate('Deliverables');
-        $this->set('data', $data);
-
-	}
-/*
-	public function index() {
-		$this->Deliverabless->recursive = 2;
-		$data = $this->paginate('Deliverabless');
-        $this->set('data', $data);
-	}
-*/
-	
-	public function detail($id) {
-	$data = $this->Deliverable->read(null,$id);
-	$allChanges = $this->ChangeRequest->find('all',array(
+		$data = $this->Deliverable->read(null,$id);
+		$allChanges = $this->ChangeRequest->find('all',array(
 			//'table' => 'deliverables',
 			//'alias' => 'Deliverable',
 			'conditions' => array(
 			'ChangeRequest.deliverable_id' => $id
 			),
-	));
+		));
 		$this->set('allChanges', $allChanges);
         $this->set('data', $data);
 	}
-    
+
+	
+	public function detail($id) {
+		$data = $this->Deliverable->read(null,$id);
+		$allChanges = $this->ChangeRequest->find('all',array(
+			//'table' => 'deliverables',
+			//'alias' => 'Deliverable',
+			'conditions' => array(
+			'ChangeRequest.deliverable_id' => $id
+			),
+		));
+		$this->set('allChanges', $allChanges);
+        $this->set('data', $data);
+	}
+    public function viewClient($id) {
+		$data = $this->Deliverable->read(null,$id);
+		$allChanges = $this->ChangeRequest->find('all',array(
+			'conditions' => array(
+			'ChangeRequest.deliverable_id' => $id
+			),
+		));
+		$this->set('allChanges', $allChanges);
+        $this->set('data', $data);
+	}
 	public function viewChangeRequest($deliverables_id){
-		
-		
-		
-		
-		if (!$deliverables_id) 
-        { 
+		/*$changeDetails = $this->ChangeRequestDetail->find('all', array(
+			'conditions' => array(
+			'ChangeRequestDetail.deliverable_id' => $deliverables_id
+			),
+		));
+		$this->set('changeDetails', $changeDetails);*/
+		if (!$deliverables_id) { 
             $this->Session->setFlash('Sorry, there was no property ID submitted.'); 
             $this->redirect(array('action'=>'index'), null, true); 
         }
@@ -174,15 +164,13 @@ class DeliverablesController extends AppController {
 		
 		$this->render();
 		
-		
 	}
 
 	public function delete($id)
 	{
-		$this->Deliverabless->id = $id;
-		// $data = $this->Deliverabless->read(null, $id);
-		if ($this->Deliverabless->delete($id)){
-			$this->Session->setFlash(__('Meeting Minute deleted'));
+		$this->Deliverable->id = $id;
+		if ($this->Deliverable->delete($id)){
+			$this->Session->setFlash(__('Deliverable deleted'));
 			return $this->redirect(array('action' => 'index'));
 		}
 	}
@@ -216,4 +204,3 @@ class DeliverablesController extends AppController {
 		return $email->send();
 	}
 }
-
