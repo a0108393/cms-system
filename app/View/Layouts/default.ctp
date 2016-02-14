@@ -17,6 +17,7 @@
 			'custom',
 			'ladda-themeless.min',
 			'token-input',
+			'tagsinput',
 			'ajaxupload/style',
 			'colorbox'
 		));
@@ -31,6 +32,7 @@
 			'select2',
 			'moment-2.4.0',
 			'jquery.tokeninput',
+			'jquery.tagsinput',
 			'bootstrap-dialog',
 			'bootstrap-switch',
 			'bootstrap-select',
@@ -42,6 +44,7 @@
 			'spin.min',
 			'ladda.min',
 			'tinyMCE4.0/tinymce.min',
+			'src/paintweb',
 			'application',
 			'admin',
 			'jquery.colorbox-min'
@@ -62,7 +65,7 @@
 			"advlist autolink lists link image charmap print preview hr anchor pagebreak",
 			"searchreplace wordcount visualblocks visualchars code fullscreen",
 			"insertdatetime media nonbreaking save table contextmenu directionality",
-			"emoticons template paste textcolor"
+			"emoticons template paste textcolor paintweb"
 		],
 		toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
 		toolbar2: "print preview media | forecolor backcolor emoticons",

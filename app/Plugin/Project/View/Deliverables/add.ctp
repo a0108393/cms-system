@@ -1,17 +1,41 @@
 <?php
 echo $this->Form->create('Deliverable');
 
-echo $this->Form->input('project_id', array(
+/*echo $this->Form->input('project_id', array(
   'fieldName' => 'data[Deliverable][project_id]',
   'label' => array('text' => __('Project'), 'class' => 'col-lg-2 control-label'),
   'options' => $project_names,
   'empty'=>'Select project',
  ));
+*/
+echo $this->Form->input('name', array(
+  'fieldName' => 'data[Deliverable][name]',
+  'label' => array('text' => __('Name'), 'class' => 'col-lg-2 control-label')
+ ));
+ 
+ echo $this->Form->input('Final Deliverables', array('type' => 'textarea'));
 
+ echo $this->Form->input('no_of_changes', array(
+  'fieldName' => 'data[Deliverable][no_of_changes]',
+  'label' => array('text' => __('Revision Allowed'), 'class' => 'col-lg-2 control-label')
+ ));
 
+ echo $this->Form->inputDatepicker('deadline', array(
+  'fieldName' => 'data[Deliverable][deadline]',
+  'label' => array('text' => __('Deadline'), 'class' => 'col-lg-2 control-label')
+ ));
 
-
-echo $this->Form->input('name');
+ echo $this->Form->input('assignTo', array(
+  'fieldName' => 'data[Deliverable][assignTo]',
+  'label' => array('text' => __('Assign To'), 'class' => 'col-lg-2 control-label'),
+  'options' => $project_names,
+  'empty'=>'Select project',
+ ));
+ 
+ echo $this->Form->inputDatepicker('due_date', array(
+  'fieldName' => 'data[Deliverable][due_date]',
+  'label' => array('text' => __('Due Date'), 'class' => 'col-lg-2 control-label')
+ ));
 /*if(in_array(Configure::read('Settings.Company.SalesStaffGroupId'), $group) || $this->Session->read('Auth.User.id') == SUPER_ADMIN) {
 	echo $this->Form->input('job_number');
 	echo $this->Form->input('company_id', array(

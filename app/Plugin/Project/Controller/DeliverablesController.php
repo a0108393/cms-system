@@ -3,59 +3,64 @@ App::uses('AppController', 'Controller');
 
 class DeliverablesController extends AppController {
 
-	public $uses = array('Project.Deliverable', 'Project', 'Project.ChangeRequest','Project.ChangeRequestDetail','User', 'Project.Brief', 'Company.Company', 'Project.NoteDetail', 'Group');
+	public $uses = array('Project.Deliverable', 'Project', 'Project.ChangeRequest','User', 'Project.Brief', 'Company.Company', 'Project.NoteDetail', 'Group');
     public function beforeFilter()
-	{
-		parent::beforeFilter();
-		$projects = $this->Project->find('all');
-		$this->set('projects', $projects);
-			
-		$project_ids = $this->Project->find('list',array(
-		   'fields' => 'name, id',
-		   'permissionable' => false,
-		   'conditions' => array(
-			
-		   ),
-		));
-		$project_names = $this->Project->find('list',array(
-			'fields' => 'id, name',
-			'permissionable' => false,
-			'conditions' => array(
-			
-			),
-		));
-		  
-		$change_requests = $this->ChangeRequest->find('list',array(
-			'fields' => 'deliverable_id',
-			'permissionable' => false,
-			'conditions' => array(  
-			),
-		));
-		  
-		$change_status = $this->ChangeRequest->find('list',array(
-			'fields' => 'status',
-			'permissionable' => false,
-			'conditions' => array(
-			),
-		));
-	  
-	  
-		$change_requests = $this ->ChangeRequest->find('all');
-	  
-		//$this->User->find('all', array('conditions'=>array('Author.id'=>'2')));
-		$clients = $this->Company->find('list',array(
-			'fields' => 'id, name',
-			'permissionable' => false,
-			'conditions' => array(
-			'Company.history_status' => 1
-			),
-			'order' => 'Company.name ASC'
-		));
-		$this->request->data['ChangeRequest']['deliverable_id'] = $change_requests;
-		$this->set(compact('clients', 'project_ids', 'project_names', 'change_requests', 'change_status'));
-	}
+ {
+  parent::beforeFilter();
+  $project_ids = $this->Project->find('list',array(
+   'fields' => 'name, id',
+   'permissionable' => false,
+   'conditions' => array(
+    
+   ),
+  ));
+  $project_names = $this->Project->find('list',array(
+   'fields' => 'id, name',
+   'permissionable' => false,
+   'conditions' => array(
+    
+   ),
+  ));
+  
+  $change_requests = $this->ChangeRequest->find('list',array(
+   'fields' => 'deliverable_id',
+   'permissionable' => false,
+   'conditions' => array(  
+   ),
+  ));
+  
+  
+  /*
+  $change_status = $this->ChangeRequest->find('list',array(
+   'fields' => 'status',
+   'permissionable' => false,
+   'conditions' => array(
+    
+   ),
+  ));
+  */
 
-	public function index() {
+  
+  //$this->User->find('all', array('conditions'=>array('Author.id'=>'2')));
+  $clients = $this->Company->find('list',array(
+   'fields' => 'id, name',
+   'permissionable' => false,
+   'conditions' => array(
+    'Company.history_status' => 1
+   ),
+   'order' => 'Company.name ASC'
+  ));
+  $this->request->data['ChangeRequest']['deliverable_id'] = $change_requests;
+  $this->set(compact('clients', 'project_ids', 'project_names','change_requests' /*'change_status'*/));
+ }
+ 
+    public function index() {
+		$this->Project->recursive = 0;
+		$data = $this->paginate('Project');
+        $this->set('data', $data);
+	} 
+
+	public function deliverabledashboard() {
 		$this->Deliverable->recursive = 2;
 		$data = $this->paginate('Deliverable');
         $this->set('data', $data);
@@ -67,8 +72,7 @@ class DeliverablesController extends AppController {
         $this->set('data', $data);
 	}
 
-	public function add($project_id){
-		$this->set('project_id',$project_id);
+	public function add(){
 		if($this->request->is(array('post', 'put'))) {
 			$this->request->data['Deliverable']['date'] = gmdate('Y-m-d h:i:s');
 			
@@ -86,7 +90,13 @@ class DeliverablesController extends AppController {
 		}
   
 	}
-
+ 
+    //add a new project
+	public function addproject() {
+		
+		
+	}
+	
 	public function edit($id) {
 		$this->Deliverable->id = $id;
 		if (!$this->Deliverable->exists()) {
@@ -134,23 +144,9 @@ class DeliverablesController extends AppController {
 		$this->set('allChanges', $allChanges);
         $this->set('data', $data);
 	}
-    public function viewClient($id) {
-		$data = $this->Deliverable->read(null,$id);
-		$allChanges = $this->ChangeRequest->find('all',array(
-			'conditions' => array(
-			'ChangeRequest.deliverable_id' => $id
-			),
-		));
-		$this->set('allChanges', $allChanges);
-        $this->set('data', $data);
-	}
+    
 	public function viewChangeRequest($deliverables_id){
-		/*$changeDetails = $this->ChangeRequestDetail->find('all', array(
-			'conditions' => array(
-			'ChangeRequestDetail.deliverable_id' => $deliverables_id
-			),
-		));
-		$this->set('changeDetails', $changeDetails);*/
+		
 		if (!$deliverables_id) { 
             $this->Session->setFlash('Sorry, there was no property ID submitted.'); 
             $this->redirect(array('action'=>'index'), null, true); 

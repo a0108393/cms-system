@@ -4,10 +4,29 @@
 	var el = document.getElementById('ChangeRequestType').value;
 	
 	if(el == 'Free') {
-	document.getElementById('ChangeRequestAmountChargeable').value = 0.00;
-	document.getElementById('ChangeRequestWaive').value = 0;
+	alert("hello");
+	document.getElementById('ChangeRequestAmountChargeableS$').value = 0;
+	document.getElementById('ChangeRequestWaive%').value = 0;
 	}
 	}
+	
+	function triggerForward() {
+	
+	}
+	
+	var room = 1;
+    function add_fields() {
+    room++;
+    var objTo = document.getElementById('add_fields')
+    var divtest = document.createElement("div");
+	var fieldname = "admin"+room;
+    divtest.innerHTML = 
+     '<label class = "col-lg-2 control-label">Forward to</label><select class = "form-control" id ="' + fieldname +'" onchange ="triggerForward()"><option value ="Free">admin 1 (to be editted)<option value = "Paid">admin 2 (to be editted)</select>';
+   
+	/*'<div class="label">Room ' + room +':</div><div class="content"><span>Width: <input type="text" id="' + fieldname +'" style="width:48px;" name="width[]" value="" /><small>(ft)</small> X</span><span>Length: <input type="text" style="width:48px;" namae="length[]" value="" /><small>(ft)</small></span></div>';
+    */
+    objTo.appendChild(divtest)
+}
 	</script>
 	
 	</header>
@@ -77,10 +96,11 @@
 	
 	
 	<?php
-	echo '<h3>change requests of the deliverable</h3>';
-	echo '<table class= "table table-striped">';
-	foreach($allChanges as $change){
 	
+	echo '<h3>change requests of the deliverable</h3>';
+	
+	foreach($allChanges as $change){
+	echo '<table class= "table table-striped">';
 		echo '<tr>';
 		echo '<td width="20%" class="briefLeft">';
 		echo __('ID');
@@ -155,25 +175,43 @@
 		echo $change['ChangeRequest']['status']; 
 		'</td>';	
 		echo '</tr>';
-		/*
-		echo '<tr>';
-		echo '<td width="20%" class="briefLeft">';
-		echo 'past change requests ';
-		foreach($allChanges as $change){
-		echo $change['ChangeRequest']['deliverable_id'];
-		echo ' ' ;
-		echo $change['ChangeRequest']['date'];
-		}
-		echo '</td>';
-		echo '</tr>';
-	*/
+		
         echo '</td>';
 		echo '</tr>';
 		echo '</table>';
 	    
+		$approvalStatus= $change['ChangeRequest']['status'];
+		
+		//client approved
+		if($approvalStatus ==  'Client Approved'){
+		
+		echo '<div id = "add_fields">';
+		echo '<label class = "col-lg-2 control-label">';
+	    echo 'Forward to';
+		echo '</label>';
+		echo '<select class = "form-control" id ="ForwardTo" onchange ="triggerForward()">';
+		//to-do:add user group filter
+		echo '<option value ="Free">admin 1 (to be editted)';
+		echo '<option value = "Paid">admin 2 (to be editted)';
+		echo '</select>';
+		echo '</div>';
+		
+		
+		echo  '<input type="button" id="more_fields" onclick="add_fields();" value="Add More" />';
+
+		
+ 
+		}
+        //client does not/have not approveFree Change Request”, “Pending Approval From Client” or “Closed
+		else if( $approvalStatus ==  'Free Change Request' ||
+		$approvalStatus == 'Pending Approval From Client'||
+		$approvalStatus == 'Closed'
+        ) {
+		
+		} else if($approvalStatus == "Pending Approval From Admin") {
 		
 		echo '<table class= "table table-striped" onchange="trigggerPay()">';
-	if( $this->Session->read('Auth.User.id') == 46) {
+	    if( $this->Session->read('Auth.User.id') == 46) {
 		/*
 		A “reply” button will be show at the end of each change request, 
 		when admin user click on it, a popup session will be shown on the screen, he would need to fill in:
@@ -263,13 +301,18 @@
 		echo $this->Form->input('Waive %');		
 		echo '</td>';
 		echo '</tr>';
-	 
+	    
+		
+		
 	 
 	     
+		}
 		}
 			echo '</td>';
 			echo '</tr>';
 			echo '</table>';
+			        echo $this->Form->submit(__('Take the Change Request'), array('id' => 'submitForm'));
+	    echo $this->Form->end();
 			}
 	?>
 

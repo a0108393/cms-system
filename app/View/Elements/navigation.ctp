@@ -63,7 +63,9 @@
 				<?php echo $this->Html->menuAction(__('Project'), 'compressed',array('plugin' => 'project', 'controller' => 'briefs'), array('class' => 'dropdown-close sidebar-item hasChild')); ?>
 
 				<ul class="nav nav-stacked sub-nav  submenu-menus">
-			
+					<li>
+						<?php echo $this->Html->menuAction(__('Dashboard'), '',array('plugin' => 'project', 'controller' => 'Dashboards', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
+					</li>
 					<li>
 						<?php echo $this->Html->menuAction(__('Briefs'), '',array('plugin' => 'project', 'controller' => 'briefs', 'action' => 'index'), array('class' => 'sidebar-item')); ?>
 					</li>
